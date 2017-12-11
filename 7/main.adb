@@ -87,6 +87,7 @@ procedure main is
                             running := false;
                         end;
                     end case;
+                    posupdate;
                     Put_Line("Kapott parancs: " & motor_parancs'Image(parancs));
                 end command;
             or
@@ -107,7 +108,7 @@ procedure main is
             epsilon : Integer := 1;
             signalAccess : access Signal;
         begin
-            if (position + epsilon - 1) mod 10 < epsilon then
+            if (position + epsilon) mod 10 <= epsilon + 1 then
                 signalAccess := new Signal((position + epsilon) / 10);
             end if;
         end;
@@ -115,14 +116,14 @@ procedure main is
         posupdate;
         loop
             select
-                when position < maximum_value => accept Move_Up do
+                when position <= maximum_value => accept Move_Up do
                     position := position + 1;
-                    --Put_Line("Fentebbment!");
+                    Put_Line("Fentebbment!");
                 end;
             or
-                when position > minimum_value => accept Move_Down do
+                when position >= minimum_value => accept Move_Down do
                     position := position - 1;
-                    --Put_Line("Lentebbment!");
+                    Put_Line("Lentebbment!");
                 end;
             or
                 terminate;
@@ -149,8 +150,10 @@ procedure main is
                         engineDirection := -1;
                     end if;
 
+                    if currentfloor /= emelet then
+                        Put_Line(" --- " & Integer'Image(emelet) & " --- ");
+                    end if;
                     currentfloor := emelet;
-                    Put_Line(" --- " & Integer'Image(emelet) & " --- ");
 
                     if currentfloor = requestedto then
                         if engineDirection > 0 then

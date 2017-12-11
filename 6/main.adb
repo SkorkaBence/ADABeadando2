@@ -103,7 +103,7 @@ procedure main is
         position: Integer := minimum_value;
 
         procedure posupdate is
-            epsilon : Integer := 1;
+            epsilon : Integer := 2;
             signalAccess : access Signal;
         begin
             if (position + epsilon - 1) mod 10 < epsilon then
